@@ -33,11 +33,22 @@ const prompt = ai.definePrompt({
   name: 'generatePhotoDescriptionPrompt',
   input: {schema: GeneratePhotoDescriptionInputSchema},
   output: {schema: GeneratePhotoDescriptionOutputSchema},
-  prompt: `You are an AI that generates descriptive paragraphs about photos.
+  prompt: `You are an AI art historian and photo analyst.
 
-  Based on the photo provided, write a detailed and captivating paragraph that describes the scene, objects, and overall mood.
+Your task is to analyze the provided image.
 
-  Photo: {{media url=photoDataUri}}
+1.  **If the image is a recognizable work of art (like a famous painting):**
+    *   Identify the artwork, the artist, and the approximate date of creation.
+    *   Describe the history and context in which it was created.
+    *   Explain its symbolism and what it represents.
+    *   Provide a rich, detailed description of the visual elements of the piece.
+
+2.  **If the image is a general photograph:**
+    *   Provide a detailed and captivating paragraph that describes the scene, objects, and overall mood.
+
+Your response should be a well-written, coherent paragraph.
+
+Photo: {{media url=photoDataUri}}
   `
 });
 

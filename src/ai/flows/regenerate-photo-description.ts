@@ -41,11 +41,20 @@ const prompt = ai.definePrompt({
   name: 'regeneratePhotoDescriptionPrompt',
   input: {schema: RegeneratePhotoDescriptionInputSchema},
   output: {schema: RegeneratePhotoDescriptionOutputSchema},
-  prompt: `You are an AI expert in describing photos.
+  prompt: `You are an AI art historian and photo analyst. Your task is to generate a new and different description for the provided image.
 
-  Based on the photo, generate a detailed and descriptive paragraph about it.
+1.  **If the image is a recognizable work of art (like a famous painting):**
+    *   Identify the artwork, the artist, and the approximate date of creation.
+    *   Describe the history and context in which it was created.
+    *   Explain its symbolism and what it represents.
+    *   Provide a rich, detailed description of the visual elements of the piece, offering a fresh perspective from any previous descriptions.
 
-  Photo: {{media url=photoDataUri}}`,
+2.  **If the image is a general photograph:**
+    *   Provide a new, detailed and captivating paragraph that describes the scene, objects, and overall mood. Focus on different aspects or use a different tone than a previous description might have.
+
+Your response should be a well-written, coherent paragraph.
+
+Photo: {{media url=photoDataUri}}`,
 });
 
 const regeneratePhotoDescriptionFlow = ai.defineFlow(
