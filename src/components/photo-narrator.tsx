@@ -113,11 +113,11 @@ export default function PhotoNarrator() {
         let newHistory = s.history;
         let viewingHistoryItem = s.viewingHistoryItem;
 
+        // If we are regenerating a history item, we create a new history entry and view it.
+        // If we are regenerating the current photo, we also create a new history entry.
+        newHistory = [...s.history, newHistoryItem];
         if (viewingHistoryItem) {
           viewingHistoryItem = newHistoryItem;
-        } else {
-           // If we are regenerating the current photo, update it in history as a new entry
-           newHistory = [...s.history, newHistoryItem];
         }
 
         return { 
@@ -126,8 +126,8 @@ export default function PhotoNarrator() {
           isLoading: false,
           history: newHistory,
           viewingHistoryItem: viewingHistoryItem,
-          // If we are regenerating the main photo, update its description
-          ...(s.photoDataUri === photoToRegenerate && { description: newDescription }),
+          // If we are regenerating the main photo (not from history), update its description
+          ...(s.photoDataUri === photoToRegenerate && !s.viewingHistoryItem && { description: newDescription }),
         }
       });
       toast({ title: "Success", description: "A new description has been generated." });
@@ -165,11 +165,16 @@ export default function PhotoNarrator() {
   const onDragLeave = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
+    // Only set isDragging to false if the leave event is not going to a child element
+    if (e.currentTarget.contains(e.relatedTarget as Node)) {
+      return;
+    }
     setState(s => ({...s, isDragging: false }));
   };
   const onDragOver = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
+    if(!state.isDragging) setState(s => ({...s, isDragging: true }));
   };
   const onDrop = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -183,16 +188,18 @@ export default function PhotoNarrator() {
 
   if (!state.photoDataUri) {
     return (
-      <div className="max-w-2xl mx-auto space-y-8">
+      <div 
+        className="max-w-2xl mx-auto space-y-8"
+        onDragEnter={onDragEnter}
+        onDragLeave={onDragLeave}
+        onDragOver={onDragOver}
+        onDrop={onDrop}
+      >
         <Card 
           className={cn(
             "border-2 border-dashed rounded-xl transition-colors duration-300",
             state.isDragging ? 'border-primary bg-primary/10' : 'border-muted'
           )}
-          onDragEnter={onDragEnter}
-          onDragLeave={onDragLeave}
-          onDragOver={onDragOver}
-          onDrop={onDrop}
         >
           <CardContent className="p-8 text-center flex flex-col items-center justify-center space-y-4 min-h-[300px]">
             <UploadCloud className="w-16 h-16 text-muted-foreground" />
@@ -289,14 +296,14 @@ export default function PhotoNarrator() {
             )}
 
             {currentDescription && (
-              <Card className="shadow-lg h-full">
+              <Card className="shadow-lg h-full flex flex-col">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-primary">
                     <Wand2 />
                     Generated Description
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="h-full">
+                <CardContent className="flex-grow">
                    {state.isLoading ? (
                      <div className="space-y-4">
                         <Skeleton className="h-4 w-full" />
@@ -307,7 +314,7 @@ export default function PhotoNarrator() {
                     <p className="text-foreground/90 font-body text-base md:text-lg leading-relaxed">{currentDescription}</p>
                    )}
                 </CardContent>
-                <CardFooter className="flex justify-end gap-2">
+                <CardFooter className="flex justify-end gap-2 mt-auto">
                   <Button variant="outline" onClick={handleCopy} disabled={state.isLoading}>
                     <Copy />
                     Copy Text
@@ -325,3 +332,5 @@ export default function PhotoNarrator() {
     </div>
   );
 }
+
+    
