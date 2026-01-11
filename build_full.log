@@ -1,0 +1,8 @@
+
+> Build error occurred
+Error: Configuring Next.js via 'next.config.ts' is not supported. Please replace the file with 'next.config.js' or 'next.config.mjs'.
+    at loadConfig (E:\Pushkar\Personal Projects\PhotoNarrator\node_modules\next\dist\server\config.js:787:19)
+    at async Span.traceAsyncFn (E:\Pushkar\Personal Projects\PhotoNarrator\node_modules\next\dist\trace\trace.js:154:20)
+    at async E:\Pushkar\Personal Projects\PhotoNarrator\node_modules\next\dist\build\index.js:372:28
+    at async Span.traceAsyncFn (E:\Pushkar\Personal Projects\PhotoNarrator\node_modules\next\dist\trace\trace.js:154:20)
+    at async build (E:\Pushkar\Personal Projects\PhotoNarrator\node_modules\next\dist\build\index.js:366:9)
